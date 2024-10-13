@@ -22,7 +22,7 @@ d_4 = 0.109
 d_5 = 0.093
 d_6 = 0.082
 q_initial = np.array([0.0, 0.0, 0.0])
-q_singularity = np.array([0.0, pi/4, pi/4])
+q_singularity = np.array([0.0, 0.0, 3])
 
 w_initial = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] #(Fx, Fy, Fz, Tx, Ty, Tz)
 
@@ -64,15 +64,14 @@ print(J_difference)
 #==============================================================================================================#
 #===========================================<ตรวจคำตอบข้อ 2>====================================================#
 #code here
-# ทดสอบฟังก์ชันด้วยค่า q_initial
-q_initial = [0.0, 0.0, 0.0]
-singularity_flag = checkSingularityHW3(q_initial)
-print(f"Singularity Flag (q_initial): {singularity_flag}")
+# ตัวอย่างการทดสอบฟังก์ชัน
+q_initial = [0.0, 0.0, 0.0]  # Configuration เริ่มต้น
+flag = checkSingularityHW3(q_initial)
+print(f"Singularity Flag (q_initial): {flag}")
 
-# ทดสอบฟังก์ชันด้วยค่า q_singularity
-q_singularity = [0.0, np.pi/4, np.pi/4]
-singularity_flag = checkSingularityHW3(q_singularity)
-print(f"Singularity Flag (q_singularity): {singularity_flag}")
+q_singularity = [0.0, 0.0, 3]  # Configuration ที่อาจเป็น Singularity
+flag = checkSingularityHW3(q_singularity)
+print(f"Singularity Flag (q_singularity): {flag}")
 #==============================================================================================================#
 #===========================================<ตรวจคำตอบข้อ 3>====================================================#
 #code here

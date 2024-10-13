@@ -21,7 +21,7 @@ d_4 = 0.109
 d_5 = 0.093
 d_6 = 0.082
 q_initial = np.array([0.0, 0.0, 0.0])
-q_singularity = np.array([0.0, pi/4, pi/4])
+q_singularity = np.array([0.0, 0.0, 3])
 w_initial = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] #(Fx, Fy, Fz, Tx, Ty, Tz)
 
 robot = rtb.DHRobot(
@@ -104,29 +104,31 @@ def checkSingularityHW3(q:list[float])->bool:
 
     epsilon = 0.001  # ค่าเกณฑ์สำหรับการตัดสิน Singularity
     
-    # เรียกใช้ฟังก์ชันที่คำนวณเมทริกซ์จาโคเบียน
-    J = endEffectorJacobianHW3(q)
-    
-    # คำนวณ Determinant ของ Jacobian
-    det_J = np.linalg.det(J[:3, :])  # ใช้เฉพาะส่วนของตำแหน่ง (Translational Jacobian)
-    
-    # ตรวจสอบสภาวะ Singularity
+    J = endEffectorJacobianHW3(q)  
+
+    # ลดรูป Jacobian: ใช้เฉพาะส่วนของ Translational Jacobian (3x3)
+    J_reduced = J[:3, :3]  
+
+    # คำนวณค่า Determinant ของ Jacobian ที่ถูกลดรูป
+    det_J = np.linalg.det(J_reduced)
+
+    # แสดงค่า Determinant เพื่อการตรวจสอบ
+    print(f"Determinant ของ Reduced Jacobian: {det_J}")
+
+    # ตรวจสอบว่าค่า Determinant น้อยกว่าเกณฑ์ epsilon หรือไม่
     if abs(det_J) < epsilon:
-        flag = 1  # อยู่ในสภาวะ Singularity
+        return 1  # อยู่ในสถานะ Singularity
     else:
-        flag = 0  # อยู่ในสภาวะปกติ
-    
-    return flag
+        return 0  # ไม่อยู่ในสถานะ Singularity
 
-# ทดสอบฟังก์ชันด้วยค่า q_initial
-q_initial = [0.0, 0.0, 0.0]
-singularity_flag = checkSingularityHW3(q_initial)
-#print(f"Singularity Flag (q_initial): {singularity_flag}")
+# ทดสอบฟังก์ชัน
+q_initial = [0.0, 0.0, 0.0]  # Configuration เริ่มต้น
+flag = checkSingularityHW3(q_initial)
+print(f"Singularity Flag (q_initial): {flag}")
 
-# ทดสอบฟังก์ชันด้วยค่า q_singularity
-q_singularity = [0.0, np.pi/4, np.pi/4]
-singularity_flag = checkSingularityHW3(q_singularity)
-#print(f"Singularity Flag (q_singularity): {singularity_flag}")
+q_singularity = [0.0, 0.0, 3]  # Configuration ที่อาจเป็น Singularity
+flag = checkSingularityHW3(q_singularity)
+print(f"Singularity Flag (q_singularity): {flag}")
 
 #==============================================================================================================#
 #=============================================<คำตอบข้อ 3>======================================================#
